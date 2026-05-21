@@ -9,24 +9,24 @@ import (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init [project-name]",
-	Short: "Initialize a new godocMVP-powered Hugo documentation site",
+	Short: "Initialize a new godoc-powered Hugo documentation site",
 	Long: `init creates a complete Hugo site with:
 - Smart Information Architecture (IA)
-- Our premium godocMVP theme
+- Our premium godoc theme
 - Pagefind search
 - Sample content
 - Deploy-ready setup
 
 Example:
-  godocMVP init my-docs`,
+  godoc init my-docs`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
 			fmt.Println("Error: project name required")
-			fmt.Println("Usage: godocMVP init <project-name>")
+			fmt.Println("Usage: godoc init <project-name>")
 			return
 		}
 		projectName := args[0]
-		fmt.Printf("🚀 Initializing godocMVP site: %s\n", projectName)
+		fmt.Printf("🚀 Initializing godoc site: %s\n", projectName)
 		fmt.Println("✅ Site created! (stub - full implementation coming in next step)")
 		// TODO: Call internal/template to embed and copy the Hugo skeleton
 	},

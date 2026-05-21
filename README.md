@@ -1,20 +1,20 @@
-# godocMVP
+# godoc
 
 **The fastest way to beautiful Hugo documentation sites.**
 
 One command. Zero friction. Production-ready docs in minutes.
 
 ```bash
-godocMVP init my-project
+godoc init my-project
 cd my-project
-godocMVP serve
+godoc serve
 ```
 
-## Why godocMVP
+## Why godoc
 
 As a tech writer turned founder, I built this to solve the exact pain I lived with for years: Hugo is powerful but the setup is painful.
 
-`godocMVP init` gives you:
+`godoc init` gives you:
 - Smart Information Architecture (IA)
 - Premium default theme (Tailwind + modern UX)
 - Pagefind search
@@ -28,16 +28,16 @@ As a tech writer turned founder, I built this to solve the exact pain I lived wi
 go install github.com/tbelskie/godocMVP@latest
 
 # Create your first docs site
-godocMVP init my-docs
+godoc init my-docs
 cd my-docs
-godocMVP serve
+godoc serve
 ```
 
 ## Development
 
 See `PROCESS.md` for our SDLC.
 
-We dogfood godocMVP to document godocMVP itself.
+We dogfood godoc to document godoc itself.
 
 ## License
 

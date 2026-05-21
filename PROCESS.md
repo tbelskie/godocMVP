@@ -1,4 +1,4 @@
-# godocMVP SDLC Process
+# godoc SDLC Process
 
 We run a lightweight but professional software development lifecycle.
 
@@ -13,6 +13,6 @@ We run a lightweight but professional software development lifecycle.
 3. **Implementation** → Task issue + branch + PR
 4. **Review** → You (product) + me (tech) review
 5. **Merge** → `main`
-6. **Dogfood** → Use godocMVP to update our own docs
+6. **Dogfood** → Use godoc to update our own docs
 
 This process is designed to build your founder skills across product, architecture, engineering, and process.

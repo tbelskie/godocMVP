@@ -9,12 +9,12 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "godocMVP",
-	Short: "godocMVP — Instant beautiful Hugo documentation sites",
-	Long: `godocMVP is the fastest way to create professional Hugo-based documentation sites.
+	Use:   "godoc",
+	Short: "godoc — Instant beautiful Hugo documentation sites",
+	Long: `godoc is the fastest way to create professional Hugo-based documentation sites.
 One command turns nothing into a full, beautiful, searchable docs site.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("✨ godocMVP — Docs as Code, done right")
+		fmt.Println("✨ godoc — Docs as Code, done right")
 		cmd.Help()
 	},
 }
