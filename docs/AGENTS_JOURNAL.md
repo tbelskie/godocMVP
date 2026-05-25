@@ -29,6 +29,33 @@ final action. Newest entries on top. Read the last 2–3 to orient quickly.
 
 ---
 
+## 2026-05-25 — Agent continuity PR shipped
+
+**Session shape:** Brief evening session to verify, push, and open the PR for the continuity work that a parallel agent had already committed locally (`2ae5869`).
+
+**Branches touched:** `feat/agent-continuity`
+
+**Shipped:**
+- PR #7 — agent continuity system (the "PR for #6" referenced in the morning entry). Open, linked to #6, will close it on merge.
+
+**Issue status:** unchanged. Roadmap unchanged.
+
+**Key decisions:**
+- Quality-checked the parallel agent's three files before pushing — `AGENTS.md`, `docs/AGENTS_JOURNAL.md` Day-1 entry, and `.cursor/rules/godoc.md` rule additions are all accurate and well-structured; shipped without modification.
+- Did not gate this PR on fixing the pre-existing build break in `main` (the `cmd/godoc` package-mixing issue that #5 fixes). This PR is docs-only; `go vet/build/test` failure on this branch is a function of the base, not the diff. Called out in the PR description so the reviewer isn't surprised.
+
+**Drive-by fixes:** none.
+
+**Next session should:**
+1. Watch for review on #5 and #7. Independent diffs — either order of merge works.
+2. After both merge, rebase any remaining work onto `main` and start Slice B on a fresh `feat/embedded-theme` branch. Slice B is the first slice that produces a visibly premium site on `hugo server` — first demoable moment.
+
+**Open questions blocking next session:** none.
+
+**Known debt to track:** unchanged from the morning entry.
+
+---
+
 ## 2026-05-25 — Day 1: Foundations + godoc init Slice A
 
 **Branches touched:** `main`, `feat/guiding-principles`, `feat/init-scaffold`, `feat/agent-continuity`
