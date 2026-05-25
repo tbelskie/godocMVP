@@ -2,6 +2,16 @@
 
 We run a lightweight but professional software development lifecycle.
 
+## Guiding Principles
+1. **Security First**  
+   Security reviews and threat-aware thinking are part of every significant change.
+2. **Simple and Elegant**  
+   Prefer straightforward implementation and maintainable process over complexity.
+3. **Focused Process**  
+   Significant work is planned in issues and delivered through focused PRs.
+4. **godoc Values**  
+   Platformless and self-hosted, AI-native and machine-readable, writer-first, and centered on helping technical writers get back to writing.
+
 ## Tools
 - GitHub Issues + GitHub Projects (our "Jira")
 - Spec / PDR templates for significant work
