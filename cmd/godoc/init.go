@@ -1,37 +1,42 @@
-package godoc
+package main
 
 import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/tbelskie/godocMVP/internal/project"
 )
 
-// initCmd represents the init command
 var initCmd = &cobra.Command{
-	Use:   "init [project-name]",
+	Use:   "init <project-name>",
 	Short: "Initialize a new godoc-powered Hugo documentation site",
-	Long: `init creates a complete Hugo site with:
-- Smart Information Architecture (IA)
-- Our premium godoc theme
-- Pagefind search
-- Sample content
-- Deploy-ready setup
+	Long: `init scaffolds a complete Hugo project layout with smart defaults:
+
+  - hugo.toml + godoc.yaml configuration
+  - content/ with Docs, Guides, and API sections
+  - llms.txt at the project root for AI/machine-readable consumers
+  - archetypes/, layouts/, assets/, static/, data/ ready for use
+
+The target directory must not already exist.
 
 Example:
   godoc init my-docs`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) == 0 {
-			fmt.Println("Error: project name required")
-			fmt.Println("Usage: godoc init <project-name>")
-			return
+	Args:         cobra.ExactArgs(1),
+	SilenceUsage: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		name := args[0]
+		target, err := project.Create(cmd.Context(), project.Options{
+			Name:    name,
+			Version: version,
+		})
+		if err != nil {
+			return err
 		}
-		projectName := args[0]
-		fmt.Printf("🚀 Initializing godoc site: %s\n", projectName)
-		fmt.Println("✅ Site created! (stub - full implementation coming in next step)")
-		// TODO: Call internal/template to embed and copy the Hugo skeleton
+		out := cmd.OutOrStdout()
+		fmt.Fprintf(out, "Created godoc project at %s\n\n", target)
+		fmt.Fprintln(out, "Next steps:")
+		fmt.Fprintf(out, "  cd %s\n", name)
+		fmt.Fprintln(out, "  hugo server")
+		return nil
 	},
-}
-
-func init() {
-	// This is called automatically by root.go
 }
