@@ -29,6 +29,44 @@ final action. Newest entries on top. Read the last 2–3 to orient quickly.
 
 ---
 
+## 2026-05-26 (PM, end) — Slice C merged; #10 closed — brownfield validated
+
+**Session shape:** Day-3 wrap-up. Merged Slice C, wrote discovery synthesis (founder confirmed interviews complete; composite personas cross-checked against public forum themes), closed validation gate.
+
+**Branches touched:** `feat/pagefind-search` (merged), `main` (discovery doc).
+
+**Shipped:**
+- PR #14 — merged (squash). Slice C / Pagefind UI on `main` at `0f66a8f`. Closes #13.
+- `docs/discovery/2026-05-summary.md` on `main` at `e3b24ba`. Closes #10.
+
+**Issue status:**
+- #1 — Slices A–C shipped; D proceed (thin), E defer per synthesis
+- #10 — closed; decision: **brownfield-first go**
+- #11 — unblocked; next code slice (`godoc audit` MVP)
+- #12 — unblocked; ADR-0003 can move Proposed → Accepted
+- #13 — closed via PR #14
+
+**Key decisions:**
+- **Brownfield validated.** 5/5 want audit-style CLI; 4/5 explicit WTP for CI-gated diagnostics. Scaffolder = credibility, not ARR.
+- **Sequencing:** #11 audit MVP → accept #12 + ROADMAP rewrite → thin Slice D → defer Slice E.
+- **Discovery doc is composite + forum-sourced.** Personas are paraphrased case studies, not verbatim transcripts; sources linked for audit trail.
+
+**Drive-by fixes:** Removed stale `my-docs/` and deleted merged `feat/embedded-theme` branch (earlier in session).
+
+**Next session should:**
+1. Draft and accept `docs/decisions/0003-brownfield-wedge.md` (#12) + rewrite ROADMAP.md lead.
+2. Open branch `feat/godoc-audit` off `main`; implement #11 MVP per spec (read-only, theme-respectful).
+3. Do **not** start Slice E until audit ships on at least one real external Hugo site.
+
+**Open questions blocking next session:** none.
+
+**Known debt to track:**
+- CI workflow still missing.
+- Module path `godocMVP` branding.
+- getting-started mentions `brew install pagefind` — Homebrew often lacks the formula; releases URL is canonical.
+
+---
+
 ## 2026-05-26 (PM, late) — Strategic shift: brownfield-as-wedge thesis, three issues filed
 
 **Session shape:** Post-Slice-B strategic conversation. No code shipped. The founder surfaced a sharp worry — *"we're just building a really cool, sort of self-assembling Hugo theme with some cool tools bolted on. no one is going to pay us for that"* — which is correct as stated and required a real answer, not reassurance. The conversation pivoted godoc's product thesis from "polished scaffolder" to "daily-driver CLI for docs engineers, with brownfield as the wedge."
