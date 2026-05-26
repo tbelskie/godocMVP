@@ -12,13 +12,15 @@ var version = "dev"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "godoc",
-	Short: "godoc — Instant beautiful Hugo documentation sites",
-	Long: `godoc is the fastest way to create professional Hugo-based documentation sites.
-One command turns nothing into a full, beautiful, searchable docs site.`,
+	Use:   "pendragon",
+	Short: "Pendragon — The AI-powered DocOps assistant",
+	Long: `Pendragon is the AI-powered DocOps assistant for documentation teams.
+
+Create beautiful Hugo documentation sites in seconds, then keep them healthy
+with audit, fix, and polish workflows designed for docs-as-code repos.`,
 	SilenceUsage: true,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Fprintln(cmd.OutOrStdout(), "godoc — Docs as Code, done right")
+		fmt.Fprintln(cmd.OutOrStdout(), "Pendragon — The AI-powered DocOps assistant")
 		_ = cmd.Help()
 	},
 }
@@ -31,6 +33,5 @@ func Execute() {
 }
 
 func init() {
-	// Add subcommands here
 	rootCmd.AddCommand(initCmd)
 }

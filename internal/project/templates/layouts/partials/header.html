@@ -5,11 +5,12 @@
       <span></span><span></span><span></span>
     </button>
     <a class="brand" href="{{ .Site.Home.RelPermalink }}">
-      {{ partial "godoc-mark.html" . }}
+      {{ partial "pendragon-wordmark.html" . }}
+      <span class="brand__sep" aria-hidden="true">·</span>
       <span class="brand__name">{{ .Site.Title }}</span>
     </a>
     <span class="header-spacer"></span>
-    <div class="search" id="godoc-search" role="search" aria-label="Search documentation">
+    <div class="search" id="pendragon-search" role="search" aria-label="Search documentation">
       <input type="search" class="search__fallback" name="q" placeholder="Search docs…"
              aria-label="Search docs" autocomplete="off"
              title="Build the search index: hugo --minify && pagefind --site public">

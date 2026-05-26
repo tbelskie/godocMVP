@@ -1,4 +1,4 @@
-/* godoc theme · Pagefind UI mount
+/* Pendragon theme · Pagefind UI mount
  * Runs after pagefind-ui.js (defer). If the index has not been built
  * yet, PagefindUI is undefined and the header fallback input stays.
  */
@@ -9,13 +9,13 @@
     if (typeof window.PagefindUI !== 'function') {
       return;
     }
-    var mount = document.getElementById('godoc-search');
+    var mount = document.getElementById('pendragon-search');
     if (!mount) {
       return;
     }
     try {
       new window.PagefindUI({
-        element: '#godoc-search',
+        element: '#pendragon-search',
         showImages: false
       });
     } catch (_) {

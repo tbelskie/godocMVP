@@ -140,7 +140,7 @@ func TestCreate_WritesExpectedSkeleton(t *testing.T) {
 
 	expected := []string{
 		"hugo.toml",
-		"godoc.yaml",
+		"pendragon.yaml",
 		"llms.txt",
 		".gitignore",
 		"content/_index.md",
@@ -160,11 +160,12 @@ func TestCreate_WritesExpectedSkeleton(t *testing.T) {
 		"layouts/partials/footer.html",
 		"layouts/partials/sidebar.html",
 		"layouts/partials/helpful.html",
-		"layouts/partials/godoc-mark.html",
+		"layouts/partials/pendragon-wordmark.html",
 		"assets/css/main.css",
 		"assets/js/theme.js",
 		"assets/js/search.js",
-		"assets/img/godoc-mark.svg",
+		"assets/img/pendragon-mark.svg",
+		"assets/img/pendragon-wordmark.svg",
 		"static/.gitkeep",
 		"data/.gitkeep",
 	}
@@ -431,13 +432,13 @@ func TestScaffoldBuildsWithHugo(t *testing.T) {
 	if !strings.Contains(homeStr, "Demo Site") {
 		t.Errorf("homepage missing humanized title 'Demo Site'; got first 400 bytes:\n%s", truncate(homeStr, 400))
 	}
-	if !strings.Contains(homeStr, "godoc-mark") {
-		t.Errorf("homepage missing brand mark partial output")
+	if !strings.Contains(homeStr, "pendragon-wordmark") {
+		t.Errorf("homepage missing Pendragon wordmark partial output")
 	}
 	if !strings.Contains(homeStr, "data-theme-toggle") {
 		t.Errorf("homepage missing theme toggle button")
 	}
-	if !strings.Contains(homeStr, "godoc-search") {
+	if !strings.Contains(homeStr, "pendragon-search") {
 		t.Errorf("homepage missing Pagefind search mount")
 	}
 	if !strings.Contains(homeStr, "/pagefind/pagefind-ui.css") {

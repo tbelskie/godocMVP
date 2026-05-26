@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="generator" content="godoc">
+<meta name="generator" content="Pendragon">
 <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
 <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Params.description }}{{ end }}">
 {{/*
@@ -12,7 +12,7 @@
 <script>
   (function () {
     try {
-      var s = localStorage.getItem('godoc-theme');
+      var s = localStorage.getItem('pendragon-theme');
       if (s === 'light' || s === 'dark') {
         document.documentElement.setAttribute('data-theme', s);
       } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
@@ -23,7 +23,7 @@
 </script>
 {{ $css := resources.Get "css/main.css" | resources.Minify | resources.Fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
-{{ with resources.Get "img/godoc-mark.svg" }}
+{{ with resources.Get "img/pendragon-mark.svg" }}
 <link rel="icon" type="image/svg+xml" href="{{ .RelPermalink }}">
 {{ end }}
 {{/* Pagefind UI — same-origin only; written by `pagefind --site public` after hugo.

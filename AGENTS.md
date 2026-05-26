@@ -1,12 +1,12 @@
 # Agents Guide
 
-This file orients new AI agents (and human teammates) to the godoc project.
+This file orients new AI agents (and human teammates) to the Pendragon project (repo: godocMVP).
 Read these in order at the start of every session.
 
 ## 1. Principles (auto-loaded)
 
 `.cursor/rules/godoc.md` — the four absolute rules: Security First, Simple
-& Elegant, Process (focused PRs linked to issues), and godoc Values.
+& Elegant, Process (focused PRs linked to issues), and Pendragon Values.
 
 ## 2. Recent context
 

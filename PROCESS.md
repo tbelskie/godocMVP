@@ -1,4 +1,4 @@
-# godoc SDLC Process
+# Pendragon SDLC Process
 
 We run a lightweight but professional software development lifecycle.
 
@@ -9,7 +9,7 @@ We run a lightweight but professional software development lifecycle.
    Prefer straightforward implementation and maintainable process over complexity.
 3. **Focused Process**  
    Significant work is planned in issues and delivered through focused PRs.
-4. **godoc Values**  
+4. **Pendragon Values**  
    Platformless and self-hosted, AI-native and machine-readable, writer-first, and centered on helping technical writers get back to writing.
 
 ## Tools
@@ -23,6 +23,6 @@ We run a lightweight but professional software development lifecycle.
 3. **Implementation** → Task issue + branch + PR
 4. **Review** → You (product) + me (tech) review
 5. **Merge** → `main`
-6. **Dogfood** → Use godoc to update our own docs
+6. **Dogfood** → Use Pendragon to update our own docs
 
 This process is designed to build your founder skills across product, architecture, engineering, and process.

@@ -1,6 +1,6 @@
-# godoc Cursor Rules
+# Pendragon Cursor Rules
 
-You are working on godoc — a security-first, simple and elegant CLI tool that creates instant beautiful Hugo documentation sites.
+You are working on Pendragon — the AI-powered DocOps assistant: a security-first, simple and elegant CLI for Hugo documentation sites and brownfield doc health.
 
 **ABSOLUTE RULES — NEVER BREAK THESE:**
 
@@ -13,7 +13,7 @@ You are working on godoc — a security-first, simple and elegant CLI tool that 
 3. **Process**  
    All significant changes must go through focused PRs linked to GitHub Issues. Never suggest direct edits to main.
 
-4. **godoc Values**  
+4. **Pendragon Values**  
    - Platformless and self-hosted
    - AI-native / machine-readable by default
    - Writer-first productivity

@@ -1,5 +1,5 @@
 /* ============================================================
- * godoc theme · MVP 1.0
+ * Pendragon theme · MVP 1.0
  *
  * Hand-written, no build step. Brand palette is declared as CSS
  * custom properties on :root so users can override either the
@@ -255,7 +255,17 @@
     text-decoration: none;
     color: var(--text);
   }
-  .brand .godoc-mark { width: 28px; height: 28px; flex: 0 0 auto; }
+  .brand .pendragon-wordmark {
+    width: auto;
+    height: 22px;
+    max-width: 9.5rem;
+    flex: 0 0 auto;
+  }
+  .brand__sep {
+    color: var(--text-faint);
+    margin-inline: var(--sp-2);
+    user-select: none;
+  }
   .brand__name {
     font-size: 1rem;
     letter-spacing: -0.01em;
@@ -284,7 +294,7 @@
   .search__fallback:focus { outline: none; border-color: var(--color-accent); }
   .search input:disabled { cursor: not-allowed; opacity: 0.75; }
 
-  /* Pagefind UI — map library tokens onto godoc semantic palette */
+  /* Pagefind UI — map library tokens onto Pendragon semantic palette */
   .search,
   .search .pagefind-ui {
     --pagefind-ui-scale: 1;
@@ -376,10 +386,11 @@
     gap: var(--sp-2);
     flex-wrap: wrap;
   }
-  .site-footer .godoc-mark {
-    width: 16px;
-    height: 16px;
-    opacity: 0.7;
+  .site-footer .pendragon-wordmark {
+    width: auto;
+    height: 14px;
+    max-width: 5.5rem;
+    opacity: 0.85;
   }
   .site-footer a { color: var(--text-muted); }
   .site-footer a:hover { color: var(--text); }
