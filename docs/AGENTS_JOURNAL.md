@@ -29,6 +29,88 @@ final action. Newest entries on top. Read the last 2–3 to orient quickly.
 
 ---
 
+## 2026-05-26 (PM) — Slice B shipped: MVP 1.0 embedded godoc theme
+
+**Session shape:** Implementation session. Founder supplied brand direction (palette, MVP-1.0 feature list, godoc logo image) mid-session; I translated it into the embedded theme, scaffolded the issue + branch + PR, and documented thoroughly so this slice is a clean handoff point.
+
+**Branches touched:** `feat/embedded-theme` (created off `main` at `832ff4c`).
+
+**Shipped:**
+- Issue #8 (Spec for Slice B) — opened and then revised mid-session to reflect the locked brand palette, MVP 1.0 requirements, and the cross-slice placeholder decision.
+- PR #9 — `feat(theme): embed MVP 1.0 godoc theme — branded, dark-first, responsive`. Open, linked to #8, closes #8 on merge, references #1 Slice B.
+
+**Issue status:**
+- #1 — Slice A merged (`a31da3a`), Slice B implementation in PR #9 awaiting review. Slices C / D / E queued.
+- #6 — closed by `832ff4c` (agent continuity).
+- #8 — open, will close on PR #9 merge.
+
+**Key decisions (all captured in ADR-0002):**
+- **D1 Hand-written CSS over pre-built Tailwind.** Tailwind-without-build is a footgun — pre-built CSS only contains classes used at *our* build time; any class a downstream writer adds silently no-ops. Hand-written design-tokens CSS (~615 lines, `@layer`-organized) is leaner, auditable, and the override surface is a small named set of semantic CSS custom properties.
+- **D2 System sans over Google Fonts / embedded fonts.** Google Fonts is a known privacy surface (GDPR fines have happened); defaulting every godoc user into that posture is unacceptable under rule #1 (Security First). System sans ships zero font bytes and renders instantly. Inter is listed as a hint for installed-Inter users only.
+- **D3 Brand mark as two SVGs.** Inline-SVG partial with `currentColor` for theme-adaptive header/footer use; standalone brand-colored SVG for favicon (where `currentColor` doesn't work). Total <2 KB.
+- **D4 Visual placeholders for Pagefind + helpful-widget.** Search input and "Was this page helpful?" widget ship as styled but `disabled` chrome with explicit `title` attrs pointing to Slice C and #2. Keeps the focused-PR rule intact while still delivering the "looks finished" first impression.
+- **D5 No `.tmpl` suffix on Hugo layouts.** Hugo's `{{ ... }}` syntax would collide with Go's `text/template` if `.tmpl`-suffixed. Documented as a convention so future agents don't break the scaffold mysteriously.
+- **D6 Vanilla JS over framework.** Three trivial behaviors (theme toggle, sidebar collapse, mobile hamburger) do not justify a runtime dependency. 76 lines of dependency-free JS.
+
+**Drive-by fixes:** none — kept the diff focused on Slice B.
+
+**Verification performed:**
+- `go vet ./... && go build ./... && go test ./...` clean. Three new tests pass (`TestEmbeddedLayouts_ParseAsTemplates`, `TestScaffoldBuildsWithHugo`, extended `TestCreate_WritesExpectedSkeleton`).
+- End-to-end manual run: `godoc init demo-site` takes **14 ms**; `hugo --minify` renders 17 pages in 15 ms; `hugo server` returns HTTP 200 with 6–7 KB body on `/`, `/docs/`, `/docs/getting-started/`, `/guides/`, `/api/`, `/changelog/`, `/contributing/`; favicon served at `/img/godoc-mark.svg`; helpful widget present on single pages but absent on home (scoped via `eq .Kind "page"` in `baseof.html`); brand mark, theme toggle markup, and SRI-fingerprinted CSS/JS all present in rendered HTML.
+
+**Documentation added:**
+- `docs/decisions/0002-embedded-theme.md` — ADR for the six decisions above.
+- `docs/theme/BRANDING.md` — living brand guide: palette + semantic tokens, type scale, logo dual-asset strategy, layout system, components (cards / code / helpful widget / skip link), motion, customization story, accessibility commitments.
+
+**Founder-asset note:** The brand image the founder shared this session was saved to `~/.cursor/projects/Users-tom-repo-godoc/assets/image-fa6947cf-ee81-4135-81f5-265c201260be.png` (per-machine, not in git). The geometry it inspired was re-authored as an SVG and embedded; the PNG itself is not in the repo.
+
+**Next session should:**
+1. Review and merge PR #9.
+2. Confirm Issue #8 closes on merge.
+3. Start Slice C on a fresh `feat/pagefind-search` branch off `main`. Slice C removes `disabled` from the search input in `header.html` and wires Pagefind. See ADR-0002 D4 for the contract; the visual chrome is already in place.
+4. In parallel, #2 (support + analytics) can pick up the helpful-widget submission flow against the disabled chrome at the bottom of every single page. Independent of Slice C; either order works.
+
+**Open questions blocking next session:** none.
+
+**Known debt to track (not blocking, unchanged from morning except where noted):**
+- Cursor rule file format: `.cursor/rules/godoc.md` still lacks YAML frontmatter; consider renaming to `.mdc` with `alwaysApply: true` before Slice C to make auto-loading reliable for fresh agents. Workaround (paste-the-orientation-prompt) is documented and proven to work.
+- Module path is still `github.com/tbelskie/godocMVP`. Branding fix is a tiny separate PR; ideally before Slice C.
+- No CI workflow yet (`.github/workflows/`). Slice B grew the test surface (real-Hugo integration test). Worth landing a small CI workflow before the test count grows further. Note: the Hugo integration test correctly `t.Skip`s when Hugo isn't on PATH, so a minimal Ubuntu-Go-only runner is fine for now; richer matrix (Hugo installed) becomes valuable later.
+- `prefers-reduced-motion` is not yet respected in the theme. Motion is subtle; revisit on user feedback. Captured in ADR-0002 "out of scope".
+- First-class theme customization surface (`params.brand.*`) is not yet designed. Will deserve its own ADR-0003 when a real user asks for it. Captured in ADR-0002 "notes for future ADRs".
+- A leftover `my-docs/` directory from Day-2 morning verification still sits untracked in the working tree. Not in any commit; safe to `rm -rf` whenever convenient.
+
+**Cross-references for the next agent:**
+- `docs/theme/BRANDING.md` is the brand guide; read this before touching any layout or CSS.
+- `docs/decisions/0002-embedded-theme.md` is the ADR — read this before deviating from any decision it captures (Tailwind, fonts, JS framework, `.tmpl` suffixes, etc.).
+- `internal/project/templates/layouts/partials/sidebar.html` reads `[[menu.main]]` from `hugo.toml`. To add a section to the sidebar, add a menu entry; the sidebar will pick it up automatically and (if the matched section has child pages) render a collapsible group.
+
+**Recommended fresh-session prompt for Day 3 (paste verbatim into a new Cursor agent chat in this workspace):**
+
+```
+Day 3 of godoc. Slice B (PR #9) ships the embedded MVP 1.0 theme with
+visual placeholders for Pagefind search (Slice C) and the helpful
+widget (#2). Once #9 merges, the next focused PR should be Slice C:
+wire Pagefind to the existing search input.
+
+Before proposing anything, please:
+1. Read AGENTS.md at the repo root.
+2. Read the top 2 entries of docs/AGENTS_JOURNAL.md.
+3. Read docs/decisions/0002-embedded-theme.md (the constraints
+   you must respect) and docs/theme/BRANDING.md (the visual surface
+   Slice C plugs into).
+4. In 3-4 sentences, confirm what you understand about where we
+   are, what Slice C's scope is, and the constraints from ADR-0002
+   (especially: no Node/npm at init time, no third-party CDN, the
+   search input chrome is already in place in header.html).
+
+Then open a new GitHub Issue spec'ing Slice C, branch
+feat/pagefind-search off main, and propose a focused implementation
+plan before writing code. Follow the rules in .cursor/rules/godoc.md.
+```
+
+---
+
 ## 2026-05-26 (AM) — Slice A verified end-to-end against real Hugo
 
 **Session shape:** Morning verification + handoff preparation. No new code; the deliverable was confidence that what shipped yesterday actually works against the real Hugo runtime, not just unit tests.
