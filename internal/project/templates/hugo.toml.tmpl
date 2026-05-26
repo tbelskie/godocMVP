@@ -1,0 +1,13 @@
+baseURL = "https://example.com/"
+languageCode = "en-us"
+title = "{{.Title}}"
+defaultContentLanguage = "en"
+enableRobotsTXT = true
+
+[params]
+description = "Documentation for {{.Title}}"
+generator = "godoc"
+
+[markup]
+  [markup.goldmark.renderer]
+    unsafe = false
