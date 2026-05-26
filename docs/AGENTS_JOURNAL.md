@@ -29,6 +29,76 @@ final action. Newest entries on top. Read the last 2–3 to orient quickly.
 
 ---
 
+## 2026-05-26 (AM) — Slice A verified end-to-end against real Hugo
+
+**Session shape:** Morning verification + handoff preparation. No new code; the deliverable was confidence that what shipped yesterday actually works against the real Hugo runtime, not just unit tests.
+
+**Branches touched:** read-only on `feat/init-scaffold`; this entry committed on `feat/agent-continuity`.
+
+**Verification performed:**
+- Built `feat/init-scaffold` binary (`go build ./cmd/godoc`), ran `godoc init demo-site` into a clean tempdir.
+- Ran `hugo` (build, no server) against the scaffold output: exit 0, produced `sitemap.xml`, `robots.txt`, `index.xml` RSS feeds, and category/tag indexes — but **no HTML pages**. This is correct Hugo-by-design behaviour: with no theme and no templates, Hugo refuses to invent HTML and silently emits zero pages.
+- Added three throwaway HTML templates (`layouts/index.html`, `layouts/_default/single.html`, `layouts/_default/list.html`) and rebuilt. Hugo produced **9 HTML pages**: homepage, all five section indexes (`/docs/`, `/guides/`, `/api/`, `/changelog/`, `/contributing/`), `/docs/getting-started/`, and the taxonomy indexes. Homepage rendered title "Demo Site" (proving `titleFromName` works in a real Hugo run), markdown content (bold, code, lists) rendered correctly, cross-links resolved.
+- Ran `hugo server --port 1314` and curled all routes: HTTP 200 across the board.
+
+**Verdict:** Slice A ships exactly what it claimed — a valid Hugo project. The "404 on every URL" issue the founder hit at the start of the session is **not a scaffolder bug**; it is Hugo correctly refusing to render without templates. Slice B's whole job is to ship those templates.
+
+**Mistake corrected:** Day-1 verification guidance said the founder would see "Hugo's default index rendering" — there is no such thing. Hugo has no built-in HTML rendering; it ships zero default layouts. Future advice should say: "Hugo will start the server, but every URL will 404 until Slice B ships layouts; the real verification is whether `hugo` builds cleanly against the scaffold output." That's the test we passed.
+
+**Implications for Slice B scope (now grounded in evidence):**
+- Three layout files (`index.html`, `_default/single.html`, `_default/list.html`) are the **absolute minimum** to make `localhost:1313` render. Slice B must ship at least these.
+- For a "breathtaking in seconds" experience, also need: a base layout (`_default/baseof.html`), a partial for nav/header, a partial for footer, and an `assets/css/` with **pre-built Tailwind CSS** committed as a static asset.
+- Hard constraint: **no Tailwind build step at `godoc init` time**. The project's "single static binary, no Node, no npm" promise (ADR-0001) requires the CSS to be pre-built and embedded.
+- Sub-second `godoc init` budget still holds — pre-built CSS is just a file copy.
+
+**Issue status:**
+- #1 — Slice A verified, ready to merge.
+- #6 — PR #7 still open, awaiting review.
+- #5 — open, awaiting review and merge.
+
+**Next session should:**
+1. Confirm merges happened on `main` for #5 and #7.
+2. Start Slice B on a fresh `feat/embedded-theme` branch off `main`.
+3. Open a new GitHub Issue for Slice B (template: Spec). Title suggestion: "Slice B: embedded minimal theme — base layout, partials, prebuilt Tailwind CSS".
+4. Implementation outline (proposal — agent should validate):
+   - Add `internal/project/templates/layouts/_default/baseof.html`
+   - Add `internal/project/templates/layouts/_default/single.html`
+   - Add `internal/project/templates/layouts/_default/list.html`
+   - Add `internal/project/templates/layouts/index.html`
+   - Add `internal/project/templates/layouts/partials/header.html`, `footer.html`, `nav.html`
+   - Add `internal/project/templates/assets/css/main.css` (pre-built Tailwind output)
+   - Update `templates.go` to embed dotfile-safe paths (already handled via `all:` prefix)
+   - Update `hugo.toml.tmpl` to wire the asset pipeline if needed
+   - Add a test that builds the scaffolded project through real Hugo and asserts non-empty HTML in `public/index.html`
+5. Acceptance criterion for Slice B: `godoc init my-site && cd my-site && hugo server` renders a styled, multi-page documentation site that a stranger would describe as "looks professional" without further configuration.
+
+**Open questions blocking next session:** none. (Founder gave explicit green light to start Slice B.)
+
+**Known debt to track:**
+- Cursor rule file format risk: `.cursor/rules/godoc.md` has no YAML frontmatter and may not auto-load into new agent sessions. The fresh-session prompt below works around this; a tiny follow-up PR to rename to `.mdc` with `alwaysApply: true` frontmatter would make the loop fully automatic. Worth doing before Slice C.
+- Module path is still `github.com/tbelskie/godocMVP` (branding drift); separate tiny PR.
+- No CI workflow yet (`.github/workflows/`); local-only testing. Should land before Slice B grows the test surface.
+
+**Recommended fresh-session prompt for Day 2 PM (paste verbatim into a new Cursor agent chat in this workspace):**
+
+```
+Day 2 of godoc. Slice A of #1 is verified end-to-end against real Hugo and
+ready to merge. Now we're starting Slice B: an embedded minimal theme so
+godoc init produces a visually finished, themed site in seconds.
+
+Before proposing anything, please:
+1. Read AGENTS.md at the repo root.
+2. Read the top 2 entries of docs/AGENTS_JOURNAL.md.
+3. In 3-4 sentences, confirm what you understand about where we are on #1,
+   what Slice B's scope is, and the project's working agreements.
+
+Then open a new GitHub Issue spec'ing Slice B, branch feat/embedded-theme off
+main, and propose a focused implementation plan before writing code.
+Follow the rules in .cursor/rules/godoc.md.
+```
+
+---
+
 ## 2026-05-25 — Agent continuity PR shipped
 
 **Session shape:** Brief evening session to verify, push, and open the PR for the continuity work that a parallel agent had already committed locally (`2ae5869`).
