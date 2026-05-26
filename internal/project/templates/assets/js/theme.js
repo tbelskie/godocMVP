@@ -1,4 +1,4 @@
-/* godoc theme · MVP 1.0
+/* Pendragon theme · MVP 1.0
  * Three behaviors, no dependencies, no build:
  *  1. theme toggle  — flips [data-theme] on <html>, persists in localStorage
  *  2. sidebar collapse — toggles aria-expanded + [hidden] on its <ul>
@@ -12,7 +12,7 @@
   'use strict';
 
   var root = document.documentElement;
-  var STORAGE_KEY = 'godoc-theme';
+  var STORAGE_KEY = 'pendragon-theme';
 
   function safeRead() {
     try { return localStorage.getItem(STORAGE_KEY); } catch (_) { return null; }

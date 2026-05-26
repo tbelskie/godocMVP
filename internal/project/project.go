@@ -1,4 +1,4 @@
-// Package project creates new godoc projects from an embedded skeleton.
+// Package project creates new Pendragon projects from an embedded skeleton.
 //
 // The package is small on purpose: no shelling out, no symlink
 // traversal, no overwriting of existing paths, and every file write
@@ -64,7 +64,7 @@ func Create(ctx context.Context, opts Options) (string, error) {
 	data := templateData{
 		ProjectName:  name,
 		Title:        titleFromName(name),
-		GodocVersion: opts.Version,
+		PendragonVersion: opts.Version,
 	}
 	if err := writeSkeleton(ctx, target, data); err != nil {
 		return "", err

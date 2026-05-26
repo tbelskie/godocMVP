@@ -1,20 +1,22 @@
-# godoc Theme Branding Guide
+# Pendragon Theme Branding Guide
 
 This is the living reference for the visual identity that every site
-scaffolded by `godoc init` ships with. It applies to the embedded MVP
+scaffolded by `pendragon init` ships with. It applies to the embedded MVP
 1.0 theme in `internal/project/templates/`. Architectural decisions
 behind these choices live in
 [`docs/decisions/0002-embedded-theme.md`](../decisions/0002-embedded-theme.md).
 
-> Users get this branding out of the box. The brand mark, palette, and
-> typography are godoc's. The content, site title, and (eventually)
+> Users get Pendragon chrome out of the box. The wordmark, palette, and
+> typography are Pendragon's. The content, site title, and (eventually)
 > overrides are the user's.
+
+**Product line:** Pendragon — *The AI-powered DocOps assistant.*
 
 ---
 
 ## 1. Brand essence
 
-godoc is a writer-first, docs-engineer's tool. The visual identity
+Pendragon is a writer-first, docs-engineer's DocOps tool. The visual identity
 should feel:
 
 - **Technical without being cold.** Deep navy primary, generous
@@ -123,28 +125,29 @@ without color noise on the rest of the page.
 
 ---
 
-## 4. Logo / brand mark
+## 4. Logo / wordmark
 
-Inspired by the supplied godoc lockup: two stacked rounded pages with
-a `</>` glyph on the front page, an emerald accent on the rear page.
+Placeholder wordmark reference: [`docs/brand/pendragon-wordmark-placeholder.png`](../brand/pendragon-wordmark-placeholder.png).
 
-We ship two variants:
+Letter colors (sentence case **Pendragon**):
 
-| File | Purpose | Color strategy |
+| Letters | Hex | Role |
 | --- | --- | --- |
-| `layouts/partials/godoc-mark.html` | Inline SVG used in the header and footer credit | Strokes use `currentColor` so the mark inherits text color and adapts to dark/light themes automatically |
-| `assets/img/godoc-mark.svg` | Standalone file referenced as the favicon | Brand colors hardcoded (navy fill, neutral-light front-page strokes, emerald rear-page accent) — the favicon must look right against any browser chrome, not the host page |
+| **P** | `#3B82F6` | Primary brand blue |
+| **e** | `#93C5FD` | Light accent blue |
+| **ndragon** | `currentColor` (theme text) | Wordmark body — white on dark, navy on light |
 
-Both variants are hand-authored on a 32×32 viewbox, ~1 KB each, no
-external rasterization.
+We ship three assets:
 
-### Wordmark
+| File | Purpose |
+| --- | --- |
+| `layouts/partials/pendragon-wordmark.html` | Inline SVG in header + footer |
+| `assets/img/pendragon-wordmark.svg` | Full-color wordmark (dark field) for marketing exports |
+| `assets/img/pendragon-mark.svg` | Favicon — **P** on `#0A0E14` |
 
-The header wordmark is the **user's site title**, rendered in the
-system sans stack at `1rem`, semibold, with `-0.01em` letter spacing.
-The godoc name itself appears only in the footer credit ("Built with
-godoc") so the site reads as the user's, with godoc as the quiet
-attribution.
+Header layout: **Pendragon wordmark · {Site Title}**. The user's site
+title stays visible so the page reads as theirs; Pendragon appears in the
+footer credit ("Built with Pendragon").
 
 ---
 

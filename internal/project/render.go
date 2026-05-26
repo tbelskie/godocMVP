@@ -17,7 +17,7 @@ const templateSuffix = ".tmpl"
 type templateData struct {
 	ProjectName  string
 	Title        string
-	GodocVersion string
+	PendragonVersion string
 }
 
 // writeSkeleton creates target, copies the embedded skeleton into it,
