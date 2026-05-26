@@ -9,15 +9,19 @@
   <div class="layout">
     {{ partial "sidebar.html" . }}
     <main id="main" class="content">
-      <article>
+      <article data-pagefind-body>
         {{ block "main" . }}{{ end }}
       </article>
       {{ if eq .Kind "page" }}
+      <div data-pagefind-ignore>
         {{ partial "helpful.html" . }}
+      </div>
       {{ end }}
     </main>
   </div>
   {{ partial "footer.html" . }}
+  {{ $search := resources.Get "js/search.js" | resources.Minify | resources.Fingerprint }}
+  <script src="{{ $search.RelPermalink }}" integrity="{{ $search.Data.Integrity }}" defer></script>
   {{ $js := resources.Get "js/theme.js" | resources.Minify | resources.Fingerprint }}
   <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
 </body>

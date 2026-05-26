@@ -9,12 +9,11 @@
       <span class="brand__name">{{ .Site.Title }}</span>
     </a>
     <span class="header-spacer"></span>
-    <form class="search" role="search" aria-label="Search documentation"
-          onsubmit="return false">
-      <input type="search" name="q" placeholder="Search docs…" aria-label="Search docs"
-             disabled aria-disabled="true"
-             title="Site search ships with Pagefind in Slice C of godoc #1">
-    </form>
+    <div class="search" id="godoc-search" role="search" aria-label="Search documentation">
+      <input type="search" class="search__fallback" name="q" placeholder="Search docs…"
+             aria-label="Search docs" autocomplete="off"
+             title="Build the search index: hugo --minify && pagefind --site public">
+    </div>
     <button class="icon-button" data-theme-toggle type="button" aria-label="Toggle light or dark theme">
       <span aria-hidden="true">◐</span>
     </button>

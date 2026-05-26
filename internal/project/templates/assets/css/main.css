@@ -267,7 +267,8 @@
     flex: 0 1 360px;
     min-width: 0;
   }
-  .search input {
+  .search input,
+  .search__fallback {
     width: 100%;
     padding: var(--sp-2) var(--sp-3);
     background: var(--bg-elevated);
@@ -277,9 +278,27 @@
     font-size: var(--fs-small);
     transition: border-color 0.12s var(--ease);
   }
-  .search input::placeholder { color: var(--text-faint); }
-  .search input:focus { outline: none; border-color: var(--color-accent); }
+  .search input::placeholder,
+  .search__fallback::placeholder { color: var(--text-faint); }
+  .search input:focus,
+  .search__fallback:focus { outline: none; border-color: var(--color-accent); }
   .search input:disabled { cursor: not-allowed; opacity: 0.75; }
+
+  /* Pagefind UI — map library tokens onto godoc semantic palette */
+  .search,
+  .search .pagefind-ui {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: var(--color-accent);
+    --pagefind-ui-text: var(--text);
+    --pagefind-ui-background: var(--bg-elevated);
+    --pagefind-ui-border: var(--border);
+    --pagefind-ui-tag: var(--border-strong);
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: var(--radius);
+    --pagefind-ui-image-border-radius: var(--radius);
+    --pagefind-ui-font: var(--font-sans);
+  }
+  .search:has(.pagefind-ui) .search__fallback { display: none; }
 
   .icon-button {
     display: inline-flex;
