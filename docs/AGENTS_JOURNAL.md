@@ -29,6 +29,167 @@ final action. Newest entries on top. Read the last 2–3 to orient quickly.
 
 ---
 
+## 2026-05-26 (PM, late) — Strategic shift: brownfield-as-wedge thesis, three issues filed
+
+**Session shape:** Post-Slice-B strategic conversation. No code shipped. The founder surfaced a sharp worry — *"we're just building a really cool, sort of self-assembling Hugo theme with some cool tools bolted on. no one is going to pay us for that"* — which is correct as stated and required a real answer, not reassurance. The conversation pivoted godoc's product thesis from "polished scaffolder" to "daily-driver CLI for docs engineers, with brownfield as the wedge."
+
+**Branches touched:** none (no commits on `feat/embedded-theme` from this conversation; this journal entry is the only artifact).
+
+**Shipped:**
+- Issue #10 — *Interview 5 docs engineers to validate brownfield demand before Slices D/E.* The cheapest possible test of the strategic thesis. Three structured questions, target mix of Docusaurus / lean-Hugo / multi-repo enterprise interviewees. Gates #11 and #12.
+- Issue #11 — *`godoc audit` MVP* spec. Read-only brownfield analyzer. Theme-respectful (never touches `layouts/`, `themes/`, `static/`). Extends `internal/project` with `Load` / `Audit` / `check.Check` interface. The Day-1 choice to name the package `project` not `scaffold` pays off here exactly as intended. Gated on #10.
+- Issue #12 — *ADR-0003 brownfield-wedge* strategic ADR. Captures the product thesis explicitly so future agents and the founder don't re-derive it on every roadmap call. Provisional until #10's interviews complete.
+
+**Issue status:**
+- #1 — Slice A merged, Slice B in PR #9, Slices C–E now under strategic review pending #10
+- #8 — open, closes on PR #9 merge (unchanged)
+- #10 / #11 / #12 — new, filed this conversation
+
+**Key decisions:**
+
+1. **The MVP is the credibility ticket, not the business.** A scaffolder competes with free tutorials and free Hugo themes (Doks, Hugo Book, Lotus Docs, Docsy). One-shot tools don't generate recurring revenue. The recurring-value product is the daily-driver commands (`audit`, `fix`, `polish`, analytics) — captured in candidate ADR-0003 (#12).
+
+2. **Brownfield is the wedge.** Far more existing Hugo docs sites than people starting new ones. Existing teams have higher willingness to pay (they have committed content, a maintenance burden, a real problem). Recurring usage is built in — `polish` runs per-PR, `audit` runs weekly. The brownfield play also defangs the SSG-agnostic question (content-layer commands are mostly engine-agnostic) and the "is the theme work wasted?" question (Slice B becomes opt-in components for brownfield users, default for greenfield).
+
+3. **Theme-respectful is the cultural rule.** godoc never modifies a user's theme files without an explicit `--inject` flag and confirmation prompt. This is what makes godoc safe to install in any team's repo without negotiation. Three integration levels were sketched: theme-respectful (no theme touch), shortcode-additive (user opts in via `{{< godoc/* >}}` shortcodes), partial-injecting (gated, explicit consent).
+
+4. **Validation before more code.** Three filed issues, only one of which (#10) acts immediately. #11 (`godoc audit` MVP) and #12 (ADR-0003) are deliberately parked until #10's interviews complete. The temptation to keep coding while uncertain about the strategic frame is exactly the trap that produces "cool tool no one pays for."
+
+5. **Slice C still ships.** Even though the strategic frame is under review, Slice C (Pagefind wiring) is small, completes the greenfield demo story, and pays off in either world. Doing it in parallel with scheduling interviews is fine; doing D and E before interviews report would be a strategic mistake.
+
+**Drive-by fixes:** none.
+
+**Next session should (supersedes the prompt at the bottom of the earlier Day-2 PM entry):**
+
+1. Confirm PR #9 is merged and Issue #8 closed.
+2. Read Issues #10, #11, #12 and ADR-0001 / 0002 for the strategic + technical frame.
+3. Open the Slice C issue (Pagefind search wiring) and branch `feat/pagefind-search` off `main`. Slice C is small and pays off in both greenfield and brownfield futures (search is a daily-driver feature); ship it.
+4. **In parallel (founder work, not agent work):** start scheduling the five interviews in #10. The agent can help draft outreach copy and interview protocol if asked, but the conversations themselves are the founder's job.
+5. Do **not** start Slice D (AI-native frontmatter) or E (API / OpenAPI scaffolding) until #10's synthesis is written and ADR-0003 is either Accepted or explicitly superseded.
+
+**Open questions blocking next session:** none. #10 will surface the questions that matter; until then, Slice C is unblocked.
+
+**Known debt to track:**
+- Same as earlier Day-2 PM entry, plus:
+- ROADMAP.md still leads with "Core Promise (MVP): `godoc init` → instant beautiful site". If ADR-0003 is Accepted, this needs rewriting to lead with brownfield. Captured in #12's acceptance criteria.
+- The Day-2 PM entry's "Recommended fresh-session prompt for Day 3" is now stale (it had next-agent start Slice C-style work, framing greenfield as the only path). The prompt below supersedes it.
+
+**Recommended fresh-session prompt for Day 3 (supersedes the earlier one — paste verbatim into a new Cursor agent chat in this workspace):**
+
+```
+Day 3 of godoc. Slice B (PR #9) shipped the embedded MVP 1.0 theme.
+Day-2 PM strategic conversation also pivoted godoc's product thesis
+from "polished scaffolder" to "daily-driver CLI; brownfield is the
+wedge." Three new issues capture the strategic frame: #10
+(validation interviews), #11 (`godoc audit` MVP, gated on #10), and
+#12 (ADR-0003 strategic ADR, provisional until #10).
+
+Before proposing anything, please:
+1. Read AGENTS.md at the repo root.
+2. Read the top 3 entries of docs/AGENTS_JOURNAL.md (the late-PM
+   entry is the one that captures the strategic shift; don't miss it).
+3. Read Issues #10, #11, and #12 for current strategic state.
+4. Read docs/decisions/0001-architecture.md and 0002-embedded-theme.md
+   for the technical constraints.
+5. In 3-4 sentences, confirm where we are on #1 (which slices
+   shipped), what the strategic thesis is (brownfield-led, with
+   greenfield as credibility ticket), and what's unblocked vs
+   blocked-pending-#10.
+
+Then: open the Slice C issue (Pagefind search wiring), branch
+feat/pagefind-search off main, and propose a focused implementation
+plan. Slice C is the only unblocked code work; it pays off in both
+greenfield and brownfield futures.
+
+Do NOT start Slices D or E. They are blocked on #10's outcome.
+Follow the rules in .cursor/rules/godoc.md and the working
+agreements in AGENTS.md.
+```
+
+---
+
+## 2026-05-26 (PM) — Slice B shipped: MVP 1.0 embedded godoc theme
+
+**Session shape:** Implementation session. Founder supplied brand direction (palette, MVP-1.0 feature list, godoc logo image) mid-session; I translated it into the embedded theme, scaffolded the issue + branch + PR, and documented thoroughly so this slice is a clean handoff point.
+
+**Branches touched:** `feat/embedded-theme` (created off `main` at `832ff4c`).
+
+**Shipped:**
+- Issue #8 (Spec for Slice B) — opened and then revised mid-session to reflect the locked brand palette, MVP 1.0 requirements, and the cross-slice placeholder decision.
+- PR #9 — `feat(theme): embed MVP 1.0 godoc theme — branded, dark-first, responsive`. Open, linked to #8, closes #8 on merge, references #1 Slice B.
+
+**Issue status:**
+- #1 — Slice A merged (`a31da3a`), Slice B implementation in PR #9 awaiting review. Slices C / D / E queued.
+- #6 — closed by `832ff4c` (agent continuity).
+- #8 — open, will close on PR #9 merge.
+
+**Key decisions (all captured in ADR-0002):**
+- **D1 Hand-written CSS over pre-built Tailwind.** Tailwind-without-build is a footgun — pre-built CSS only contains classes used at *our* build time; any class a downstream writer adds silently no-ops. Hand-written design-tokens CSS (~615 lines, `@layer`-organized) is leaner, auditable, and the override surface is a small named set of semantic CSS custom properties.
+- **D2 System sans over Google Fonts / embedded fonts.** Google Fonts is a known privacy surface (GDPR fines have happened); defaulting every godoc user into that posture is unacceptable under rule #1 (Security First). System sans ships zero font bytes and renders instantly. Inter is listed as a hint for installed-Inter users only.
+- **D3 Brand mark as two SVGs.** Inline-SVG partial with `currentColor` for theme-adaptive header/footer use; standalone brand-colored SVG for favicon (where `currentColor` doesn't work). Total <2 KB.
+- **D4 Visual placeholders for Pagefind + helpful-widget.** Search input and "Was this page helpful?" widget ship as styled but `disabled` chrome with explicit `title` attrs pointing to Slice C and #2. Keeps the focused-PR rule intact while still delivering the "looks finished" first impression.
+- **D5 No `.tmpl` suffix on Hugo layouts.** Hugo's `{{ ... }}` syntax would collide with Go's `text/template` if `.tmpl`-suffixed. Documented as a convention so future agents don't break the scaffold mysteriously.
+- **D6 Vanilla JS over framework.** Three trivial behaviors (theme toggle, sidebar collapse, mobile hamburger) do not justify a runtime dependency. 76 lines of dependency-free JS.
+
+**Drive-by fixes:** none — kept the diff focused on Slice B.
+
+**Verification performed:**
+- `go vet ./... && go build ./... && go test ./...` clean. Three new tests pass (`TestEmbeddedLayouts_ParseAsTemplates`, `TestScaffoldBuildsWithHugo`, extended `TestCreate_WritesExpectedSkeleton`).
+- End-to-end manual run: `godoc init demo-site` takes **14 ms**; `hugo --minify` renders 17 pages in 15 ms; `hugo server` returns HTTP 200 with 6–7 KB body on `/`, `/docs/`, `/docs/getting-started/`, `/guides/`, `/api/`, `/changelog/`, `/contributing/`; favicon served at `/img/godoc-mark.svg`; helpful widget present on single pages but absent on home (scoped via `eq .Kind "page"` in `baseof.html`); brand mark, theme toggle markup, and SRI-fingerprinted CSS/JS all present in rendered HTML.
+
+**Documentation added:**
+- `docs/decisions/0002-embedded-theme.md` — ADR for the six decisions above.
+- `docs/theme/BRANDING.md` — living brand guide: palette + semantic tokens, type scale, logo dual-asset strategy, layout system, components (cards / code / helpful widget / skip link), motion, customization story, accessibility commitments.
+
+**Founder-asset note:** The brand image the founder shared this session was saved to `~/.cursor/projects/Users-tom-repo-godoc/assets/image-fa6947cf-ee81-4135-81f5-265c201260be.png` (per-machine, not in git). The geometry it inspired was re-authored as an SVG and embedded; the PNG itself is not in the repo.
+
+**Next session should:**
+1. Review and merge PR #9.
+2. Confirm Issue #8 closes on merge.
+3. Start Slice C on a fresh `feat/pagefind-search` branch off `main`. Slice C removes `disabled` from the search input in `header.html` and wires Pagefind. See ADR-0002 D4 for the contract; the visual chrome is already in place.
+4. In parallel, #2 (support + analytics) can pick up the helpful-widget submission flow against the disabled chrome at the bottom of every single page. Independent of Slice C; either order works.
+
+**Open questions blocking next session:** none.
+
+**Known debt to track (not blocking, unchanged from morning except where noted):**
+- Cursor rule file format: `.cursor/rules/godoc.md` still lacks YAML frontmatter; consider renaming to `.mdc` with `alwaysApply: true` before Slice C to make auto-loading reliable for fresh agents. Workaround (paste-the-orientation-prompt) is documented and proven to work.
+- Module path is still `github.com/tbelskie/godocMVP`. Branding fix is a tiny separate PR; ideally before Slice C.
+- No CI workflow yet (`.github/workflows/`). Slice B grew the test surface (real-Hugo integration test). Worth landing a small CI workflow before the test count grows further. Note: the Hugo integration test correctly `t.Skip`s when Hugo isn't on PATH, so a minimal Ubuntu-Go-only runner is fine for now; richer matrix (Hugo installed) becomes valuable later.
+- `prefers-reduced-motion` is not yet respected in the theme. Motion is subtle; revisit on user feedback. Captured in ADR-0002 "out of scope".
+- First-class theme customization surface (`params.brand.*`) is not yet designed. Will deserve its own ADR-0003 when a real user asks for it. Captured in ADR-0002 "notes for future ADRs".
+- A leftover `my-docs/` directory from Day-2 morning verification still sits untracked in the working tree. Not in any commit; safe to `rm -rf` whenever convenient.
+
+**Cross-references for the next agent:**
+- `docs/theme/BRANDING.md` is the brand guide; read this before touching any layout or CSS.
+- `docs/decisions/0002-embedded-theme.md` is the ADR — read this before deviating from any decision it captures (Tailwind, fonts, JS framework, `.tmpl` suffixes, etc.).
+- `internal/project/templates/layouts/partials/sidebar.html` reads `[[menu.main]]` from `hugo.toml`. To add a section to the sidebar, add a menu entry; the sidebar will pick it up automatically and (if the matched section has child pages) render a collapsible group.
+
+**Recommended fresh-session prompt for Day 3 (paste verbatim into a new Cursor agent chat in this workspace):**
+
+```
+Day 3 of godoc. Slice B (PR #9) ships the embedded MVP 1.0 theme with
+visual placeholders for Pagefind search (Slice C) and the helpful
+widget (#2). Once #9 merges, the next focused PR should be Slice C:
+wire Pagefind to the existing search input.
+
+Before proposing anything, please:
+1. Read AGENTS.md at the repo root.
+2. Read the top 2 entries of docs/AGENTS_JOURNAL.md.
+3. Read docs/decisions/0002-embedded-theme.md (the constraints
+   you must respect) and docs/theme/BRANDING.md (the visual surface
+   Slice C plugs into).
+4. In 3-4 sentences, confirm what you understand about where we
+   are, what Slice C's scope is, and the constraints from ADR-0002
+   (especially: no Node/npm at init time, no third-party CDN, the
+   search input chrome is already in place in header.html).
+
+Then open a new GitHub Issue spec'ing Slice C, branch
+feat/pagefind-search off main, and propose a focused implementation
+plan before writing code. Follow the rules in .cursor/rules/godoc.md.
+```
+
+---
+
 ## 2026-05-26 (AM) — Slice A verified end-to-end against real Hugo
 
 **Session shape:** Morning verification + handoff preparation. No new code; the deliverable was confidence that what shipped yesterday actually works against the real Hugo runtime, not just unit tests.

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="{{ default "en" .Site.LanguageCode }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  {{ partial "header.html" . }}
+  <div class="layout">
+    {{ partial "sidebar.html" . }}
+    <main id="main" class="content">
+      <article>
+        {{ block "main" . }}{{ end }}
+      </article>
+      {{ if eq .Kind "page" }}
+        {{ partial "helpful.html" . }}
+      {{ end }}
+    </main>
+  </div>
+  {{ partial "footer.html" . }}
+  {{ $js := resources.Get "js/theme.js" | resources.Minify | resources.Fingerprint }}
+  <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+</body>
+</html>

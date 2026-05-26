@@ -1,0 +1,26 @@
+{{ define "main" }}
+<section class="hero">
+  <h1 class="hero__title">{{ .Site.Title }}</h1>
+  {{ with .Site.Params.description }}<p class="hero__lede">{{ . }}</p>{{ end }}
+</section>
+
+{{ with .Content }}
+<div class="hero__body">
+  {{ . }}
+</div>
+{{ end }}
+
+{{ with .Site.Menus.main }}
+<ul class="cards">
+  {{ range . }}
+    {{ $section := site.GetPage .URL }}
+    <li>
+      <a class="card" href="{{ .URL }}">
+        <div class="card__title">{{ .Name }}</div>
+        <p class="card__desc">{{ with $section }}{{ with .Description }}{{ . }}{{ end }}{{ end }}</p>
+      </a>
+    </li>
+  {{ end }}
+</ul>
+{{ end }}
+{{ end }}
