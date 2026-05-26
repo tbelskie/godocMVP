@@ -26,3 +26,7 @@
 {{ with resources.Get "img/godoc-mark.svg" }}
 <link rel="icon" type="image/svg+xml" href="{{ .RelPermalink }}">
 {{ end }}
+{{/* Pagefind UI — same-origin only; written by `pagefind --site public` after hugo.
+     Missing assets degrade gracefully (fallback input in header.html). */}}
+<link rel="stylesheet" href="/pagefind/pagefind-ui.css">
+<script src="/pagefind/pagefind-ui.js" defer></script>

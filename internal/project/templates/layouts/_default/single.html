@@ -1,6 +1,6 @@
 {{ define "main" }}
 <header>
-  <h1>{{ .Title }}</h1>
+  <h1 data-pagefind-meta="title">{{ .Title }}</h1>
   {{ with .Description }}<p class="page-description">{{ . }}</p>{{ end }}
 </header>
 {{ .Content }}

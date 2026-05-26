@@ -163,6 +163,7 @@ func TestCreate_WritesExpectedSkeleton(t *testing.T) {
 		"layouts/partials/godoc-mark.html",
 		"assets/css/main.css",
 		"assets/js/theme.js",
+		"assets/js/search.js",
 		"assets/img/godoc-mark.svg",
 		"static/.gitkeep",
 		"data/.gitkeep",
@@ -435,6 +436,64 @@ func TestScaffoldBuildsWithHugo(t *testing.T) {
 	}
 	if !strings.Contains(homeStr, "data-theme-toggle") {
 		t.Errorf("homepage missing theme toggle button")
+	}
+	if !strings.Contains(homeStr, "godoc-search") {
+		t.Errorf("homepage missing Pagefind search mount")
+	}
+	if !strings.Contains(homeStr, "/pagefind/pagefind-ui.css") {
+		t.Errorf("homepage missing Pagefind UI stylesheet link")
+	}
+}
+
+// TestScaffoldIndexesWithPagefind runs hugo and pagefind against a
+// scaffolded project. Skipped when either binary is missing so CI
+// without Pagefind stays green.
+func TestScaffoldIndexesWithPagefind(t *testing.T) {
+	t.Parallel()
+	hugoBin, err := exec.LookPath("hugo")
+	if err != nil {
+		t.Skip("hugo not on PATH")
+	}
+	pagefindBin, err := exec.LookPath("pagefind")
+	if err != nil {
+		t.Skip("pagefind not on PATH")
+	}
+
+	parent := t.TempDir()
+	target, err := Create(context.Background(), Options{
+		Name:      "search-site",
+		ParentDir: parent,
+	})
+	if err != nil {
+		t.Fatalf("Create failed: %v", err)
+	}
+
+	hugo := exec.Command(hugoBin, "--minify", "--quiet")
+	hugo.Dir = target
+	if out, err := hugo.CombinedOutput(); err != nil {
+		t.Fatalf("hugo build failed: %v\noutput:\n%s", err, out)
+	}
+
+	pf := exec.Command(pagefindBin, "--site", "public", "--quiet")
+	pf.Dir = target
+	if out, err := pf.CombinedOutput(); err != nil {
+		t.Fatalf("pagefind failed: %v\noutput:\n%s", err, out)
+	}
+
+	uiJS := filepath.Join(target, "public/pagefind/pagefind-ui.js")
+	if info, err := os.Stat(uiJS); err != nil {
+		t.Fatalf("missing %s: %v", uiJS, err)
+	} else if info.Size() < 1000 {
+		t.Errorf("pagefind-ui.js unexpectedly small (%d bytes)", info.Size())
+	}
+
+	fragDir := filepath.Join(target, "public/pagefind/fragment")
+	entries, err := os.ReadDir(fragDir)
+	if err != nil {
+		t.Fatalf("read fragment dir: %v", err)
+	}
+	if len(entries) == 0 {
+		t.Error("expected at least one Pagefind index fragment")
 	}
 }
 
