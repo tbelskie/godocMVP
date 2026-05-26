@@ -18,3 +18,24 @@ You are working on godoc — a security-first, simple and elegant CLI tool that 
    - AI-native / machine-readable by default
    - Writer-first productivity
    - Help technical writers get back to writing
+
+## Session orientation
+
+At the **start** of every working session, read `AGENTS.md` at the repo root
+and the last 2–3 entries of `docs/AGENTS_JOURNAL.md`. This is the durable
+memory of the project; it's how you avoid re-deriving context from scratch.
+
+## End-of-session ritual
+
+Before ending a working session, append a dated entry to
+`docs/AGENTS_JOURNAL.md` summarizing:
+
+- Branches touched and PRs/commits shipped
+- Issue status changes
+- Key decisions and one-line rationale for each
+- What the next session should pick up first
+- Any blocking open questions
+- Known debt worth tracking (not blocking)
+
+This rule is non-negotiable. The journal is the project's memory; skipping
+an entry breaks continuity for every future agent and human teammate.
