@@ -5,9 +5,11 @@ import (
 	"errors"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
+	"text/template"
 )
 
 func TestValidateName_AcceptsValidNames(t *testing.T) {
@@ -149,8 +151,19 @@ func TestCreate_WritesExpectedSkeleton(t *testing.T) {
 		"content/changelog.md",
 		"content/contributing.md",
 		"archetypes/default.md",
-		"layouts/.gitkeep",
-		"assets/.gitkeep",
+		"layouts/index.html",
+		"layouts/_default/baseof.html",
+		"layouts/_default/single.html",
+		"layouts/_default/list.html",
+		"layouts/partials/head.html",
+		"layouts/partials/header.html",
+		"layouts/partials/footer.html",
+		"layouts/partials/sidebar.html",
+		"layouts/partials/helpful.html",
+		"layouts/partials/godoc-mark.html",
+		"assets/css/main.css",
+		"assets/js/theme.js",
+		"assets/img/godoc-mark.svg",
 		"static/.gitkeep",
 		"data/.gitkeep",
 	}
@@ -316,4 +329,118 @@ func TestSkeletonFS_HasEnoughFiles(t *testing.T) {
 	if count < 12 {
 		t.Errorf("expected at least 12 embedded skeleton files, got %d", count)
 	}
+}
+
+// TestEmbeddedLayouts_ParseAsTemplates parses every embedded Hugo
+// layout/partial with Go's text/template parser. Hugo's template
+// syntax is a strict superset of Go's, so successful parsing here
+// rules out the most common typos (unbalanced braces, unclosed
+// blocks, malformed actions) at unit-test time even when Hugo is
+// not available on PATH.
+//
+// Hugo-specific functions are registered as no-op stubs so the
+// parser recognizes them as function calls; their return values
+// are never used (parse-only check).
+func TestEmbeddedLayouts_ParseAsTemplates(t *testing.T) {
+	t.Parallel()
+	stub := func(args ...interface{}) interface{} { return nil }
+	funcs := template.FuncMap{
+		"partial":   stub,
+		"anchorize": stub,
+		"now":       stub,
+		"site":      stub,
+		"resources": stub,
+		"default":   stub,
+	}
+	layoutsRoot := skeletonRoot + "/layouts"
+	walkErr := fs.WalkDir(skeletonFS, layoutsRoot, func(path string, d fs.DirEntry, walkErr error) error {
+		if walkErr != nil {
+			return walkErr
+		}
+		if d.IsDir() || !strings.HasSuffix(path, ".html") {
+			return nil
+		}
+		body, err := fs.ReadFile(skeletonFS, path)
+		if err != nil {
+			return err
+		}
+		if _, err := template.New(path).Funcs(funcs).Parse(string(body)); err != nil {
+			t.Errorf("parse %s: %v", path, err)
+		}
+		return nil
+	})
+	if walkErr != nil {
+		t.Fatal(walkErr)
+	}
+}
+
+// TestScaffoldBuildsWithHugo is the end-to-end check that what we
+// scaffold actually renders through real Hugo. It is skipped when
+// hugo is not on PATH so the unit-test build remains hermetic; on
+// developer machines and any CI runner with Hugo installed, it
+// guards against template regressions that the parse-only test
+// cannot catch (missing partials, bad asset pipeline calls, etc.).
+func TestScaffoldBuildsWithHugo(t *testing.T) {
+	t.Parallel()
+	hugoBin, err := exec.LookPath("hugo")
+	if err != nil {
+		t.Skip("hugo not on PATH; skipping real-Hugo integration build")
+	}
+
+	parent := t.TempDir()
+	target, err := Create(context.Background(), Options{
+		Name:      "demo-site",
+		ParentDir: parent,
+	})
+	if err != nil {
+		t.Fatalf("Create failed: %v", err)
+	}
+
+	cmd := exec.Command(hugoBin, "--minify", "--quiet")
+	cmd.Dir = target
+	if out, err := cmd.CombinedOutput(); err != nil {
+		t.Fatalf("hugo build failed: %v\noutput:\n%s", err, out)
+	}
+
+	checks := []string{
+		"public/index.html",
+		"public/docs/index.html",
+		"public/docs/getting-started/index.html",
+		"public/guides/index.html",
+		"public/api/index.html",
+		"public/changelog/index.html",
+		"public/contributing/index.html",
+	}
+	for _, rel := range checks {
+		body, err := os.ReadFile(filepath.Join(target, rel))
+		if err != nil {
+			t.Errorf("missing %s: %v", rel, err)
+			continue
+		}
+		if len(body) < 200 {
+			t.Errorf("%s body too short (%d bytes); did the template render empty?", rel, len(body))
+		}
+	}
+
+	home, err := os.ReadFile(filepath.Join(target, "public/index.html"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	homeStr := string(home)
+	if !strings.Contains(homeStr, "Demo Site") {
+		t.Errorf("homepage missing humanized title 'Demo Site'; got first 400 bytes:\n%s", truncate(homeStr, 400))
+	}
+	if !strings.Contains(homeStr, "godoc-mark") {
+		t.Errorf("homepage missing brand mark partial output")
+	}
+	if !strings.Contains(homeStr, "data-theme-toggle") {
+		t.Errorf("homepage missing theme toggle button")
+	}
+}
+
+func truncate(s string, n int) string {
+	if len(s) <= n {
+		return s
+	}
+	return s[:n] + "…"
 }

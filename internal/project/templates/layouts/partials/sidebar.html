@@ -1,0 +1,35 @@
+<nav class="sidebar" id="site-sidebar" data-sidebar data-open="false" aria-label="Documentation navigation">
+  {{ range $i, $entry := .Site.Menus.main }}
+    {{ $section := site.GetPage $entry.URL }}
+    {{ $hasChildren := false }}
+    {{ if $section }}
+      {{ if and $section.Pages (gt (len $section.Pages) 0) }}
+        {{ $hasChildren = true }}
+      {{ end }}
+    {{ end }}
+    {{ $slug := anchorize $entry.Name }}
+    <div class="nav__section">
+      <div class="nav__row">
+        <a class="nav__heading-link{{ if and $section (eq $.RelPermalink $section.RelPermalink) }} is-active{{ end }}"
+           href="{{ $entry.URL }}">{{ $entry.Name }}</a>
+        {{ if $hasChildren }}
+          <button class="nav__toggle" data-nav-toggle type="button"
+                  aria-expanded="true" aria-controls="nav-list-{{ $slug }}"
+                  aria-label="Toggle {{ $entry.Name }} section">
+            <span aria-hidden="true">▾</span>
+          </button>
+        {{ end }}
+      </div>
+      {{ if $hasChildren }}
+        <ul id="nav-list-{{ $slug }}" class="nav__list">
+          {{ range $section.Pages.ByWeight }}
+            <li>
+              <a class="nav__link{{ if eq $.RelPermalink .RelPermalink }} is-active{{ end }}"
+                 href="{{ .RelPermalink }}">{{ .LinkTitle | default .Title }}</a>
+            </li>
+          {{ end }}
+        </ul>
+      {{ end }}
+    </div>
+  {{ end }}
+</nav>

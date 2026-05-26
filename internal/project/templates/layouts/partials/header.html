@@ -1,0 +1,22 @@
+<header class="site-header">
+  <div class="site-header__inner">
+    <button class="icon-button hamburger" data-hamburger type="button"
+            aria-label="Toggle navigation" aria-controls="site-sidebar" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <a class="brand" href="{{ .Site.Home.RelPermalink }}">
+      {{ partial "godoc-mark.html" . }}
+      <span class="brand__name">{{ .Site.Title }}</span>
+    </a>
+    <span class="header-spacer"></span>
+    <form class="search" role="search" aria-label="Search documentation"
+          onsubmit="return false">
+      <input type="search" name="q" placeholder="Search docs…" aria-label="Search docs"
+             disabled aria-disabled="true"
+             title="Site search ships with Pagefind in Slice C of godoc #1">
+    </form>
+    <button class="icon-button" data-theme-toggle type="button" aria-label="Toggle light or dark theme">
+      <span aria-hidden="true">◐</span>
+    </button>
+  </div>
+</header>
