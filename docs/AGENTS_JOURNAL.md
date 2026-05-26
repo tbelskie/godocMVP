@@ -29,6 +29,85 @@ final action. Newest entries on top. Read the last 2–3 to orient quickly.
 
 ---
 
+## 2026-05-26 (PM, late) — Strategic shift: brownfield-as-wedge thesis, three issues filed
+
+**Session shape:** Post-Slice-B strategic conversation. No code shipped. The founder surfaced a sharp worry — *"we're just building a really cool, sort of self-assembling Hugo theme with some cool tools bolted on. no one is going to pay us for that"* — which is correct as stated and required a real answer, not reassurance. The conversation pivoted godoc's product thesis from "polished scaffolder" to "daily-driver CLI for docs engineers, with brownfield as the wedge."
+
+**Branches touched:** none (no commits on `feat/embedded-theme` from this conversation; this journal entry is the only artifact).
+
+**Shipped:**
+- Issue #10 — *Interview 5 docs engineers to validate brownfield demand before Slices D/E.* The cheapest possible test of the strategic thesis. Three structured questions, target mix of Docusaurus / lean-Hugo / multi-repo enterprise interviewees. Gates #11 and #12.
+- Issue #11 — *`godoc audit` MVP* spec. Read-only brownfield analyzer. Theme-respectful (never touches `layouts/`, `themes/`, `static/`). Extends `internal/project` with `Load` / `Audit` / `check.Check` interface. The Day-1 choice to name the package `project` not `scaffold` pays off here exactly as intended. Gated on #10.
+- Issue #12 — *ADR-0003 brownfield-wedge* strategic ADR. Captures the product thesis explicitly so future agents and the founder don't re-derive it on every roadmap call. Provisional until #10's interviews complete.
+
+**Issue status:**
+- #1 — Slice A merged, Slice B in PR #9, Slices C–E now under strategic review pending #10
+- #8 — open, closes on PR #9 merge (unchanged)
+- #10 / #11 / #12 — new, filed this conversation
+
+**Key decisions:**
+
+1. **The MVP is the credibility ticket, not the business.** A scaffolder competes with free tutorials and free Hugo themes (Doks, Hugo Book, Lotus Docs, Docsy). One-shot tools don't generate recurring revenue. The recurring-value product is the daily-driver commands (`audit`, `fix`, `polish`, analytics) — captured in candidate ADR-0003 (#12).
+
+2. **Brownfield is the wedge.** Far more existing Hugo docs sites than people starting new ones. Existing teams have higher willingness to pay (they have committed content, a maintenance burden, a real problem). Recurring usage is built in — `polish` runs per-PR, `audit` runs weekly. The brownfield play also defangs the SSG-agnostic question (content-layer commands are mostly engine-agnostic) and the "is the theme work wasted?" question (Slice B becomes opt-in components for brownfield users, default for greenfield).
+
+3. **Theme-respectful is the cultural rule.** godoc never modifies a user's theme files without an explicit `--inject` flag and confirmation prompt. This is what makes godoc safe to install in any team's repo without negotiation. Three integration levels were sketched: theme-respectful (no theme touch), shortcode-additive (user opts in via `{{< godoc/* >}}` shortcodes), partial-injecting (gated, explicit consent).
+
+4. **Validation before more code.** Three filed issues, only one of which (#10) acts immediately. #11 (`godoc audit` MVP) and #12 (ADR-0003) are deliberately parked until #10's interviews complete. The temptation to keep coding while uncertain about the strategic frame is exactly the trap that produces "cool tool no one pays for."
+
+5. **Slice C still ships.** Even though the strategic frame is under review, Slice C (Pagefind wiring) is small, completes the greenfield demo story, and pays off in either world. Doing it in parallel with scheduling interviews is fine; doing D and E before interviews report would be a strategic mistake.
+
+**Drive-by fixes:** none.
+
+**Next session should (supersedes the prompt at the bottom of the earlier Day-2 PM entry):**
+
+1. Confirm PR #9 is merged and Issue #8 closed.
+2. Read Issues #10, #11, #12 and ADR-0001 / 0002 for the strategic + technical frame.
+3. Open the Slice C issue (Pagefind search wiring) and branch `feat/pagefind-search` off `main`. Slice C is small and pays off in both greenfield and brownfield futures (search is a daily-driver feature); ship it.
+4. **In parallel (founder work, not agent work):** start scheduling the five interviews in #10. The agent can help draft outreach copy and interview protocol if asked, but the conversations themselves are the founder's job.
+5. Do **not** start Slice D (AI-native frontmatter) or E (API / OpenAPI scaffolding) until #10's synthesis is written and ADR-0003 is either Accepted or explicitly superseded.
+
+**Open questions blocking next session:** none. #10 will surface the questions that matter; until then, Slice C is unblocked.
+
+**Known debt to track:**
+- Same as earlier Day-2 PM entry, plus:
+- ROADMAP.md still leads with "Core Promise (MVP): `godoc init` → instant beautiful site". If ADR-0003 is Accepted, this needs rewriting to lead with brownfield. Captured in #12's acceptance criteria.
+- The Day-2 PM entry's "Recommended fresh-session prompt for Day 3" is now stale (it had next-agent start Slice C-style work, framing greenfield as the only path). The prompt below supersedes it.
+
+**Recommended fresh-session prompt for Day 3 (supersedes the earlier one — paste verbatim into a new Cursor agent chat in this workspace):**
+
+```
+Day 3 of godoc. Slice B (PR #9) shipped the embedded MVP 1.0 theme.
+Day-2 PM strategic conversation also pivoted godoc's product thesis
+from "polished scaffolder" to "daily-driver CLI; brownfield is the
+wedge." Three new issues capture the strategic frame: #10
+(validation interviews), #11 (`godoc audit` MVP, gated on #10), and
+#12 (ADR-0003 strategic ADR, provisional until #10).
+
+Before proposing anything, please:
+1. Read AGENTS.md at the repo root.
+2. Read the top 3 entries of docs/AGENTS_JOURNAL.md (the late-PM
+   entry is the one that captures the strategic shift; don't miss it).
+3. Read Issues #10, #11, and #12 for current strategic state.
+4. Read docs/decisions/0001-architecture.md and 0002-embedded-theme.md
+   for the technical constraints.
+5. In 3-4 sentences, confirm where we are on #1 (which slices
+   shipped), what the strategic thesis is (brownfield-led, with
+   greenfield as credibility ticket), and what's unblocked vs
+   blocked-pending-#10.
+
+Then: open the Slice C issue (Pagefind search wiring), branch
+feat/pagefind-search off main, and propose a focused implementation
+plan. Slice C is the only unblocked code work; it pays off in both
+greenfield and brownfield futures.
+
+Do NOT start Slices D or E. They are blocked on #10's outcome.
+Follow the rules in .cursor/rules/godoc.md and the working
+agreements in AGENTS.md.
+```
+
+---
+
 ## 2026-05-26 (PM) — Slice B shipped: MVP 1.0 embedded godoc theme
 
 **Session shape:** Implementation session. Founder supplied brand direction (palette, MVP-1.0 feature list, godoc logo image) mid-session; I translated it into the embedded theme, scaffolded the issue + branch + PR, and documented thoroughly so this slice is a clean handoff point.
